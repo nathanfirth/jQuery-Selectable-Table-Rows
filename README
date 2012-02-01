@@ -1,3 +1,6 @@
+jQuery Selectable Table Rows Plugin
+------------------------------------------------------
+
 Purpose:
 
 To replicate the functionality of a multi-select input on a table so that multiple columns may be used.
