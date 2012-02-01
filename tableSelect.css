@@ -1,0 +1,38 @@
+.tableSelect {
+	table-layout:fixed;
+	overflow:hidden;
+}
+
+.tableSelect tr, .tableSelect td {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	outline: medium none;
+}
+
+.tableSelect tr.selected td {
+	background: #DFE8F6;
+}
+
+.tableSelect td {
+	width: 33%;
+}
+
+.tableSelect td {
+	border-top: 0px solid #fff;
+	border-bottom: 1px dotted #ccc;
+	border-left: 0px solid #fff;
+	border-right: 0px solid #fff;
+}
+
+.tableSelect tr.disabled td {
+	background: #EEE;
+	color: #999;
+}
+
+.tableSelect tr.disabledSelected td {
+	border-top: 1px solid #62b7ff;
+	border-bottom: 1px solid #62b7ff;
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<title>Selectable Table Rows with Keyboard Controls</title>
+		<link rel="stylesheet" type="text/css" media="all" href="style.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="tableSelect.css" />
+		<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="js/jquery.tableSelect.js"></script>
+		<script type="text/javascript">
+		
+			var selectedRows = function() {
+				var instance = this;
+				if (!this.list) {
+					this.list=[];
+				}
+				this.add = function(row) {
+					list.push(row);
+				};
+				this.remove = function(row) {
+					for (var i=0; i<list.length;i++) {
+						if (list[i] == row) {
+							this.list.splice(i,1);
+						}
+					}
+				};
+				return(instance);
+			}();
+			
+			$(document).ready(function() {	
+				$('#demoTable').tableSelect({
+					onClick: function(row) {
+						//alert(row);
+					},
+					onDoubleClick: function(rows) {
+						$.each(rows,function(i,row) {
+							var name = $(row).children('td').eq(0).html() + ' ' + $(row).children('td').eq(1).html();
+							if ($(row).hasClass('disabled')) {
+								$(row).removeClass('disabled');
+								selectedRows.remove(name);
+							} else {
+								$(row).addClass('disabled');
+								selectedRows.add(name);
+							}
+						});
+						updateList();
+					},
+					onChange: function(row) {
+						//alert(row);
+					}
+				});
+			});
+			
+			function updateList() {
+				$('.selectedRows').html('');
+				$.each(selectedRows.list,function() {
+					$('.selectedRows').append('<li>'+this+'</li>');
+				});
+			};
+		
+		</script>
+	</head>
+	<body>
+	
+		<div id="container">
+			<table id="demoTable" border="0" tabindex="1" cellspacing="0" cellpadding="2">
+				<thead>
+					<tr>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>City</th>
+						<th>State</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>John</td>
+						<td>Smith</td>
+						<td>San Diego</td>
+						<td>CA</td>
+					</tr>
+					<tr>
+						<td>John</td>
+						<td>Henderson</td>
+						<td>San Diego</td>
+						<td>CA</td>
+					</tr>
+					<tr>
+						<td>Peter</td>
+						<td>Smith</td>
+						<td>Portland</td>
+						<td>OR</td>
+					</tr>
+					<tr>
+						<td>Greg</td>
+						<td>Jones</td>
+						<td>Los Angeles</td>
+						<td>CA</td>
+					</tr>
+					<tr>
+						<td>Susi</td>
+						<td>Johnson</td>
+						<td>San Diego</td>
+						<td>CA</td>
+					</tr>
+					<tr>
+						<td>Craig</td>
+						<td>Muster</td>
+						<td>Carlsbad</td>
+						<td>CA</td>
+					</tr>
+					<tr>
+						<td>George</td>
+						<td>Maffia</td>
+						<td>New York</td>
+						<td>NY</td>
+					</tr>
+					<tr>
+						<td>Tara</td>
+						<td>Lindstrom</td>
+						<td>Orlando</td>
+						<td>FL</td>
+					</tr>
+					<tr>
+						<td>Justin</td>
+						<td>Reid</td>
+						<td>San Marcos</td>
+						<td>CA</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="columnRight">
+				<fieldset>
+					<legend>Selected Rows</legend>
+						<ul class="selectedRows">
+						</ul>
+				</fieldset>
+			</div>
+			<div class="clear"></div><br />
+			<b>Keyboard Controls:</b> Ctrl, Shift, Up/Down, Enter<br />
+			<b>Mouse Controls:</b> Single Click, Double Click
+		</div>
+		<b>Purpose:</b>
+		<p>To replicate the functionality of a select box on a table so that multiple columns may be used.</p>
+		<b>Known Issues:</b>
+		<ul>
+			<li>Can't "tab" into the table to gain focus, must click with mouse for keyboard controls to work</li>
+			<li>Once row is disabled, it cannot be enabled via keyboard controls (double click still works)</li>
+		</ul>
+		<b>Browsers Support:</b>
+		<ul>
+			<li>Firefox</li>
+			<li>Chrome</li>
+			<li>Internet Explorer 7-9 (havent tested 6)</li>
+		</ul>
+	</body>
+</html>

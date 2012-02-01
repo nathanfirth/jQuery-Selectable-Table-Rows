@@ -1,0 +1,30 @@
+Purpose:
+
+To replicate the functionality of a multi-select input on a table so that multiple columns may be used.
+
+Known Issues:
+
+    Can't "tab" into the table to gain focus, must click with mouse for keyboard controls to work
+    Once row is disabled, it cannot be enabled via keyboard controls (double click still works)
+
+Browsers Support:
+
+    Firefox
+    Chrome
+    Internet Explorer 6-9
+	Safari
+	
+Supports three callbacks:
+
+    on select (single click)
+    double click (or “Enter” key)
+    on change
+
+Supports the following keyboard controls:
+
+    Ctrl + Click
+    Shift + Click
+    Shift + Ctrl + Click
+    Shift + Up|Down Keys
+    Up|Down Keys
+    Enter (to select)
