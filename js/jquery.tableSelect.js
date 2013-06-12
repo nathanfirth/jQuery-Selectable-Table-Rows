@@ -108,7 +108,7 @@
 				}
 			});
 		});
-		$(table).live('keydown',function(ev){
+		$(table).on('keydown',function(ev){
 			
 			switch(ev.keyCode) { 
 			
