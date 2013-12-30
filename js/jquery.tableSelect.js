@@ -52,7 +52,7 @@
 					var first = tableRows.index(this);
 					var start = Math.min(first, last);
 					var end = Math.max(first, last)+1;
-					if (ev.ctrlKey) {
+					if (ev.metaKey) {
 						// do nothing
 					} else {
 						$.each(tableRows, function() {
@@ -67,7 +67,7 @@
 					originalRow = lastSelected;
 					currentRow = this;					
 				}
-				else if (ev.ctrlKey) {
+				else if (ev.metaKey) {
 					if (this.className.search(clickedClass) > -1) {
 						$(this).removeClass(clickedClass);
 					} else {
