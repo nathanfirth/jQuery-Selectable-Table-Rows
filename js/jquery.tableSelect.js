@@ -21,103 +21,105 @@
 		if (!options) {
 			var options = {};
 		}
-	
-		var table = $(this);
-		var tableRows = $(table).find('tr');
-		
-		$(table).addClass('tableSelect');
+
+		var $table = $(this);
+		$table.addClass('tableSelect');
 
 		var clickedClass = 'selected';
 		var tableFocus = 'focused';
+
+		var getTableRows =  function () {
+			return $($table.find('tr'));
+		}
+		var getSelectedTableRows =  function () {
+			return $($table.find('tr.' + clickedClass));
+		}
+
 		var lastSelected;
 		var originalRow;
 		var currentRow;
-		
-		$(table).click(function() {
-			$(table).focus();
+
+		if (!$table.prop('tabindex')) {
+			$table.prop('tabindex', '0');
+		}
+
+		$table.click(function() {
+			$table.focusin();
 		});
-					
-		$(table).focusin(function() {
+
+		$table.focusin(function() {
 			$('table.' + tableFocus).removeClass(tableFocus);
-			$(table).addClass(tableFocus);
+			$table.addClass(tableFocus);
 		});
-			
-		$.each(tableRows, function() {
-			$(this).children('td').attr('class', '');
-			$(this).children('td').attr('unselectable', 'on');
-			$(this).click(function(ev) {
-						
-				if (ev.shiftKey) {
-					var last = tableRows.index(lastSelected);
-					var first = tableRows.index(this);
-					var start = Math.min(first, last);
-					var end = Math.max(first, last)+1;
-					if (ev.ctrlKey) {
-						// do nothing
-					} else {
-						$.each(tableRows, function() {
-							$(this).removeClass(clickedClass);
-						});
-					}
-					for (var i = start; i < end; i++) {
-						if ($(tableRows[i]).hasClass('disabled') == false) {
-							$(tableRows[i]).addClass(clickedClass);
-						}
-					}
-					originalRow = lastSelected;
-					currentRow = this;					
+
+		$table.on('click', 'tr', function (ev) {
+			var $tableRows = getTableRows();
+
+			if (ev.shiftKey) {
+				var last = $tableRows.index(lastSelected);
+				var first = $tableRows.index(this);
+				var start = Math.min(first, last);
+				var end = Math.max(first, last)+1;
+				if (ev.ctrlKey) {
+					// do nothing
+				} else {
+					$tableRows.removeClass(clickedClass);
 				}
-				else if (ev.ctrlKey) {
-					if (this.className.search(clickedClass) > -1) {
-						$(this).removeClass(clickedClass);
-					} else {
-						if ($(this).hasClass('disabled') == false) {
-							$(this).addClass(clickedClass);
-						}
+				for (var i = start; i < end; i++) {
+					if ($($tableRows[i]).hasClass('disabled') == false) {
+						$($tableRows[i]).addClass(clickedClass);
 					}
-					lastSelected = this;
-					currentRow = this;
-					originalRow = this;
 				}
-				else {
-					$.each(tableRows, function() {
-						$(this).removeClass(clickedClass);
-					});
+				originalRow = lastSelected;
+				currentRow = this;
+			}
+			else if (ev.ctrlKey) {
+				if (this.className.search(clickedClass) > -1) {
+					$(this).removeClass(clickedClass);
+				} else {
 					if ($(this).hasClass('disabled') == false) {
 						$(this).addClass(clickedClass);
-						lastSelected = this;
-						originalRow = this;
-						currentRow = this;
-					}
-					if (options.onClick) {
-						options.onClick(this);
 					}
 				}
-				
-				if (options.onChange) {
-					options.onChange(this);
+				lastSelected = this;
+				currentRow = this;
+				originalRow = this;
+			}
+			else {
+				$tableRows.removeClass(clickedClass);
+				if ($(this).hasClass('disabled') == false) {
+					$(this).addClass(clickedClass);
+					lastSelected = this;
+					originalRow = this;
+					currentRow = this;
 				}
-				
-			});
-			$(this).dblclick(function() {
-				if (options.onDoubleClick) {
-					var thisRow = {};
-					thisRow.row = [];
-					thisRow.row.push(this);
-					options.onDoubleClick(thisRow.row);
+				if (options.onClick) {
+					options.onClick(this);
 				}
-			});
+			}
+
+			if (options.onChange) {
+				options.onChange(this);
+			}
 		});
-		$(table).on('keydown',function(ev){
-			
-			switch(ev.keyCode) { 
-			
+
+		$table.on('dblclick', 'tr', function (ev) {
+			if (options.onDoubleClick) {
+				var thisRow = {};
+				thisRow.row = [];
+				thisRow.row.push(this);
+				options.onDoubleClick(thisRow.row);
+			}
+		});
+
+		$table.keydown(function(ev){
+			switch(ev.keyCode) {
 				case 16: // User pressed "shift" key
 				break;
 			
 				case 13: // User pressed "enter" key
 					if (options.onDoubleClick) {
-						var selectedRows = $('tr.selected');
+						var $selectedRows = getSelectedTableRows();
 						options.onDoubleClick(selectedRows);
 					}
 				break;
@@ -137,12 +139,14 @@
 
 		function navigate(direction, ev) {
 		
+			var $tableRows = getTableRows();
+
 			if (!lastSelected) {
-				lastSelected = $(tableRows[0]);
+				lastSelected = $($tableRows[0]);
 			}
 			
 			if (!originalRow) {
-				originalRow = $(tableRows[0]);
+				originalRow = $($tableRows[0]);
 			}
 		
 			if (direction == "down") {
@@ -163,25 +167,21 @@
 			}
 
 			if (!ev.shiftKey) {
-				$.each(tableRows, function() {
-					$(this).removeClass(clickedClass);
-				});
+				$tableRows.removeClass(clickedClass);
 				if ($(newRow).hasClass('disabled') == false) {
 					$(newRow).addClass(clickedClass);
 					lastSelected = currentRow;
 					originalRow = currentRow;
 				}
 			} else {
-				$.each(tableRows, function() {
-					$(this).removeClass(clickedClass);
-				});
-				var last = tableRows.index(newRow);
-				var first = tableRows.index(originalRow);
+				$tableRows.removeClass(clickedClass);
+				var last = $tableRows.index(newRow);
+				var first = $tableRows.index(originalRow);
 				var start = Math.min(first, last);
 				var end = Math.max(first, last)+1;
 				for (var i = start; i < end; i++) {
-					if ($(tableRows[i]).hasClass('disabled') == false) {
-						$(tableRows[i]).addClass(clickedClass);
+					if ($($tableRows[i]).hasClass('disabled') == false) {
+						$($tableRows[i]).addClass(clickedClass);
 					}
 				}
 			}
