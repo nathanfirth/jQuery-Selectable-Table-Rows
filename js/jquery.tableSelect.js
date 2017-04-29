@@ -15,7 +15,7 @@
  */
 
 
-(function($) {
+(($ => {
 	$.fn.tableSelect = function(options) {
 		
 		if (!options) {
@@ -33,11 +33,11 @@
 		var originalRow;
 		var currentRow;
 		
-		$(table).click(function() {
+		$(table).click(() => {
 			$(table).focus();
 		});
 					
-		$(table).focusin(function() {
+		$(table).focusin(() => {
 			$('table.' + tableFocus).removeClass(tableFocus);
 			$(table).addClass(tableFocus);
 		});
@@ -108,7 +108,7 @@
 				}
 			});
 		});
-		$(table).on('keydown',function(ev){
+		$(table).on('keydown',ev => {
 			
 			switch(ev.keyCode) { 
 			
@@ -194,4 +194,4 @@
 		
 	};
 	
-})(jQuery);
+}))(jQuery);
